@@ -53,6 +53,7 @@ export default function SignUp() {
           className="border p-3 rounded-lg focus:outline-slate-500"
           id="username"
           onChange={handleChange}
+          required
         />
         <input
           type="email"
@@ -60,6 +61,7 @@ export default function SignUp() {
           className="border p-3 rounded-lg focus:outline-slate-500"
           id="email"
           onChange={handleChange}
+          required
         />
         <input
           type="password"
@@ -67,6 +69,7 @@ export default function SignUp() {
           className="border p-3 rounded-lg focus:outline-slate-500"
           id="password"
           onChange={handleChange}
+          required
         />
         <button
           disabled={loading}
@@ -76,12 +79,16 @@ export default function SignUp() {
         </button>
       </form>
       <div className="flex gap-2 mt-5 justify-center">
-        <p>Уже зарегистрировались?</p>
+        <p>Уже зарегистрированы?</p>
         <Link to="/sign-in">
           <span className="text-blue-700">Войти</span>
         </Link>
       </div>
-      {error && <p className="text-red-500 mt-5">{error}</p>}
+      {error && (
+        <div className="flex items-center justify-center">
+          <p className="text-red-500 mt-5">{error}</p>
+        </div>
+      )}
     </div>
   );
 }
