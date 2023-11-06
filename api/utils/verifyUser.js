@@ -5,7 +5,7 @@ export const verifyToken = (req, res, next) => {
   const token = req.cookies.access_token;
 
   if (!token) {
-    return next(errorHandler(401, "Не авторизованы"));
+    return next(errorHandler(401, "Вы не авторизованы"));
   }
 
   jwt.verify(token, "dsfsafdfgsdfgsdf34f", (err, user) => {
