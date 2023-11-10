@@ -1,16 +1,21 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { LiaUserCogSolid } from "react-icons/lia";
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateUserSuccess,
   updateUserStart,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
+  signOutUserStart,
 } from "../redux/user/userSlice";
 
 export default function Profile() {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { currentUser, loading, error } = useSelector((state) => state.user);
 
   const handleChange = (e) => {
@@ -38,6 +43,38 @@ export default function Profile() {
       setUpdateSuccess(true);
     } catch (error) {
       dispatch(updateUserFailure(error.message));
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutUserStart());
+      const res = await fetch("/api/auth/signout");
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
     }
   };
 
@@ -70,29 +107,42 @@ export default function Profile() {
           className="border p-3 rounded-lg focus:outline-slate-500"
           id="password"
         />
-        <button
-          disabled={loading}
-          className=" mt-4 bg-slate-500 text-white p-3 rounded-lg uppercase hover:bg-slate-600 hover:shadow-lg transition min-w-[15rem] m-auto disabled:opacity-80 disabled:hover:bg-slate-500 disabled:hover:opacity-80 disabled:hover:shadow-none"
-        >
-          {loading ? "Загрузка.." : "Обновить"}
-        </button>
+        <div className="flex items-center gap-5">
+          <button
+            disabled={loading}
+            className=" mt-4 bg-slate-500 text-white p-3 rounded-lg uppercase hover:bg-slate-600 hover:shadow-lg transition min-w-[13rem] m-auto disabled:opacity-80 disabled:hover:bg-slate-500 disabled:hover:opacity-80 disabled:hover:shadow-none"
+          >
+            {loading ? "Загрузка.." : "Обновить данные"}
+          </button>
+          <Link
+            className=" mt-4 bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:bg-green-800 hover:shadow-lg transition min-w-[13rem] m-auto"
+            to={"/create-listing"}
+          >
+            Создать объект
+          </Link>
+        </div>
       </form>
-      <div className="flex justify-end mt-7 gap-5">
-        <span className="text-red-700 hover:text-red-900 transition cursor-pointer">
+      <div className="flex justify-between mt-7 px-4 gap-5">
+        <span
+          onClick={handleDeleteUser}
+          className="text-red-700 hover:text-red-900 transition cursor-pointer"
+        >
           Удалить аккаунт
         </span>
-        <span className="text-red-700 hover:text-red-900 transition cursor-pointer">
+        <span
+          onClick={handleSignOut}
+          className="text-red-700 hover:text-red-900 transition cursor-pointer"
+        >
           Выйти
         </span>
       </div>
-      
+
       <div className="flex items-center justify-center">
         <p className="text-red-700 mt-5">{error ? error.message : ""}</p>
         <p className="text-green-700 mt-5">
-        {updateSuccess ? "Данные пользователя обновлены!" : ""}
-      </p>
+          {updateSuccess ? "Данные пользователя обновлены!" : ""}
+        </p>
       </div>
-      
     </div>
   );
 }

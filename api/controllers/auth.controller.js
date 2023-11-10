@@ -42,3 +42,12 @@ export const signin = async (req, res, next) => {
     next(err);
   }
 };
+
+export const signout = async (req, res, next) => {
+  try {
+    res.clearCookie("access_token");
+    res.status(200).json("Вы вышли из профиля!");
+  } catch (error) {
+    next(error);
+  }
+};
