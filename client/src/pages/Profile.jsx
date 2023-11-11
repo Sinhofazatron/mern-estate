@@ -118,7 +118,7 @@ export default function Profile() {
             className=" mt-4 bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:bg-green-800 hover:shadow-lg transition min-w-[13rem] m-auto"
             to={"/create-listing"}
           >
-            Создать объект
+            Добавить объект
           </Link>
         </div>
       </form>
