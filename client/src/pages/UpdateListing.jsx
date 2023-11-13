@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getDownloadURL,
   getStorage,
@@ -7,11 +7,12 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function CreateListing() {
+export default function UpdateListing() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const params = useParams();
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     imageUrls: [],
@@ -31,6 +32,23 @@ export default function CreateListing() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchListing = async () => {
+		const listingId = params.listingId;
+		const res = await fetch(`/api/listing/get/${listingId}`)
+		const data = await res.json()
+
+		if(data.success === false) {
+			console.log(data.message)
+			return
+		}
+
+		setFormData(data)
+	};
+
+    fetchListing();
+  }, []);
 
   const handleImageSubmit = () => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
@@ -129,10 +147,12 @@ export default function CreateListing() {
       if (formData.imageUrls.length < 1)
         return setError("Вы должны загрузить хотя бы одно изображение");
       if (+formData.regularPrice < +formData.discountPrice)
-        return setError("Цена по акции должна быть меньше чем стандартная цена");
+        return setError(
+          "Цена по акции должна быть меньше чем стандартная цена"
+        );
       setLoading(true);
       setError(false);
-      const res = await fetch("/api/listing/create", {
+      const res = await fetch(`/api/listing/update/${params.listingId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -156,7 +176,7 @@ export default function CreateListing() {
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7 mb-16">
-        Добавить объект
+        Редактировать объект
       </h1>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
         <div className="flex flex-col gap-4 flex-1">
@@ -361,7 +381,7 @@ export default function CreateListing() {
             disabled={loading || uploading}
             className=" mt-4 bg-slate-500 text-white p-3 rounded-lg uppercase hover:bg-slate-600 hover:shadow-lg transition min-w-[13rem] m-auto disabled:opacity-80 disabled:hover:bg-slate-500 disabled:hover:opacity-80 disabled:hover:shadow-none"
           >
-            {loading ? "Добавление..." : "Добавить объект"}
+            {loading ? "Обновление..." : "Обновить объект"}
           </button>
           {error && <p className="text-red-700 text-sm">{error}</p>}
         </div>

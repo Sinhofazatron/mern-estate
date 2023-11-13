@@ -11,10 +11,15 @@ import {
   deleteUserFailure,
   signOutUserStart,
 } from "../redux/user/userSlice";
+import { FiEdit2 } from "react-icons/fi";
+import { AiOutlineDelete } from "react-icons/ai";
 
 export default function Profile() {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showListingsError, setShowListingsError] = useState(false);
+  const [showListingsNotFound, setShowListingsNotFound] = useState(false);
+  const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
   const { currentUser, loading, error } = useSelector((state) => state.user);
 
@@ -75,6 +80,48 @@ export default function Profile() {
       dispatch(deleteUserSuccess(data));
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
+    }
+  };
+
+  const handleListingDelete = async (listingId) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleShowListings = async () => {
+    try {
+      setShowListingsError(false);
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+
+      if (data.success === false) {
+        setShowListingsError(true);
+        return;
+      }
+
+      if (data.length === 0) {
+        setShowListingsNotFound(true);
+        return;
+      }
+
+      setUserListings(data);
+    } catch (error) {
+      setShowListingsError(true);
     }
   };
 
@@ -143,6 +190,55 @@ export default function Profile() {
           {updateSuccess ? "Данные пользователя обновлены!" : ""}
         </p>
       </div>
+      <button
+        onClick={handleShowListings}
+        className="flex items-center justify-center text-green-700 mt-5 text-lg rounded-lg text-center hover:text-green-900  transition m-auto"
+      >
+        <span>Мои объекты</span>
+      </button>
+      <p className="text-red-700 mt-5">
+        {showListingsError ? "Ошибка загрузки объекта" : ""}
+      </p>
+      <p className="text-red-700 mt-5">
+        {showListingsNotFound ? "У Вас нет объектов" : ""}
+      </p>
+
+      {userListings &&
+        userListings.length > 0 &&
+        userListings.map((listing) => (
+          <div
+            key={listing._id}
+            className="flex items-center justify-between rounded-lg border p-3 gap-4 mt-4"
+          >
+            <Link to={`/listing/${listing._id}`}>
+              <img
+                src={listing.imageUrls[0]}
+                alt={listing.name}
+                className="w-16 h-16 object-contain"
+              />
+            </Link>
+            <Link
+              className="text-slate-700 font-semibold hover:underline transition truncate flex-1"
+              to={`/listing/${listing._id}`}
+            >
+              <p>{listing.name}</p>
+            </Link>
+            <div className="flex items-center gap-4">
+              <Link to={`/update-listing/${listing._id}`} className='mt-1'>
+                <button className=" text-green-700">
+                  <FiEdit2 size={22} />
+                </button>
+              </Link>
+
+              <button
+                onClick={() => handleListingDelete(listing._id)}
+                className=" text-red-700"
+              >
+                <AiOutlineDelete size={22} />
+              </button>
+            </div>
+          </div>
+        ))}
     </div>
   );
 }
