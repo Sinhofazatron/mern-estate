@@ -64,6 +64,7 @@ export default function Search() {
     };
 
     fetchListings();
+    window.scrollTo(0, 0);
   }, [location.search]);
 
   const handleChange = (e) => {
@@ -127,6 +128,7 @@ export default function Search() {
     }
     setListings([...listings, ...data]);
   };
+
   return (
     <div className="flex flex-col md:flex-row">
       <div className="p-7  border-b-2 md:border-r-2 md:min-h-screen">
@@ -254,7 +256,7 @@ export default function Search() {
               onClick={onShowMoreClick}
               className="text-green-700 hover:underline p-7 text-center w-full"
             >
-              Показать больше
+              Показать еще
             </button>
           )}
         </div>
