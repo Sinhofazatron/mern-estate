@@ -129,7 +129,9 @@ export default function CreateListing() {
       if (formData.imageUrls.length < 1)
         return setError("Вы должны загрузить хотя бы одно изображение");
       if (+formData.regularPrice < +formData.discountPrice)
-        return setError("Цена по акции должна быть меньше чем стандартная цена");
+        return setError(
+          "Цена по акции должна быть меньше чем стандартная цена"
+        );
       setLoading(true);
       setError(false);
       const res = await fetch("/api/listing/create", {
@@ -198,7 +200,7 @@ export default function CreateListing() {
                 onChange={handleChange}
                 checked={formData.type === "sale"}
               />
-              <span>Сдать</span>
+              <span>Продать</span>
             </div>
             <div className="flex gap-2">
               <input
@@ -208,7 +210,7 @@ export default function CreateListing() {
                 onChange={handleChange}
                 checked={formData.type === "rent"}
               />
-              <span>Арендовать</span>
+              <span>Сдать</span>
             </div>
             <div className="flex gap-2">
               <input
@@ -282,7 +284,9 @@ export default function CreateListing() {
               <div className="flex flex-col items-center">
                 <p>Стандартная цена</p>
                 {formData.type === "rent" && (
-                  <span className="text-xs">(руб/месяц)</span>
+                  <span className="text-xs">
+                    <a>{"\u20bd"}</a>/месяц
+                  </span>
                 )}
               </div>
             </div>
@@ -302,7 +306,11 @@ export default function CreateListing() {
                   <p>Цена по акции</p>
 
                   {formData.type === "rent" && (
-                    <span className="text-xs">(руб/месяц)</span>
+                    <span className="text-xs">
+                      <span className="text-xs">
+                        <a>{"\u20bd"}</a>/месяц
+                      </span>
+                    </span>
                   )}
                 </div>
               </div>
