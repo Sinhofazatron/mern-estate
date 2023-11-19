@@ -13,7 +13,7 @@ import {
   FaParking,
   FaShare,
 } from "react-icons/fa";
-// import Contact from "../components/Contact";
+import Contact from "../components/Contact";
 
 export default function Listing() {
   SwiperCore.use([Navigation]);
@@ -144,15 +144,15 @@ export default function Listing() {
                 {listing.furnished ? "Мебель" : "Без мебели"}
               </li>
             </ul>
-            {currentUser && listing.userRef !== currentUser._id && !contact && (
+            {currentUser && listing.userRef === currentUser._id && !contact && (
               <button
                 onClick={() => setContact(true)}
-                className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3"
+                className=" mt-4 bg-green-700 text-white p-3 rounded-lg uppercase min-w-full hover:bg-green-800 hover:shadow-lg transition m-auto"
               >
-                Связаться с арендодателем
+                Связаться с владельцем
               </button>
             )}
-            {/* {contact && <Contact listing={listing} />} */}
+            {contact && <Contact listing={listing} />}
           </div>
         </div>
       )}
