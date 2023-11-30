@@ -1,11 +1,3 @@
-<h1 align="center">Gold Key</h1>
-
-<br />
-
-<h2 align="center"><a target="_blank"  href="https://gold-key.onrender.com">Live Demo</a></h2>
-
-<br />
-<br />
 
 <p align="center">
   
@@ -22,6 +14,13 @@
 <img src="https://img.shields.io/badge/Redux--persist-6.0.0-blue.svg">
 
 </p>
+
+<h1 align="center">Gold Key</h1>
+
+
+<h2 align="center"><a target="_blank"  href="https://gold-key.onrender.com">Live Demo</a></h2>
+
+<br />
 
 <p align="center">
    
