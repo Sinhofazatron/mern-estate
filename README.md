@@ -2,7 +2,7 @@
 
 <br />
 
-<h2 align="center"><a  href="https://gold-key.onrender.com">Live Demo</a></h2>
+<h2 align="center"><a target="_blank"  href="https://gold-key.onrender.com">Live Demo</a></h2>
 
 <br />
 <br />
