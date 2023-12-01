@@ -1,7 +1,5 @@
 
 <p align="center">
-  
-<img src="https://img.shields.io/appveyor/ci/gruntjs/grunt.svg">
 
 <img src="https://img.shields.io/badge/made%20by-Sinhofazatron-blue.svg" >
 
@@ -11,7 +9,9 @@
 
 <img src="https://img.shields.io/badge/firebase-10.3.1-green.svg">
 
-<img src="https://img.shields.io/badge/Redux--persist-6.0.0-blue.svg">
+<img src="https://img.shields.io/badge/Express-4.18.2-blue.svg">
+
+<img src="https://img.shields.io/badge/MongoDB-green.svg">
 
 </p>
 
